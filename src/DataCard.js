@@ -41,8 +41,7 @@ const DataCard = (props) => {
       dislikes: props.data.thumbs_down,
       link: props.data.permalink,
     };
-    // TODO NEXT
-    // props.addSave(newSave)
+    props.addSave(newSave);
   };
 
   const toSource = () => {
@@ -53,7 +52,7 @@ const DataCard = (props) => {
     <Card className={classes.container}>
       <CardHeader
         action={
-          <IconButton aria-label="share">
+          <IconButton aria-label="share" onClick={onAdd}>
             <AddIcon style={{ color: "#00C851" }} />
           </IconButton>
         }

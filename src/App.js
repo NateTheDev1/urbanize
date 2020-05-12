@@ -6,14 +6,22 @@ import {
   InputBase,
   Toolbar,
   Grid,
+  Button,
+  Snackbar,
+  IconButton,
+  Alert,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@material-ui/icons/Close";
 import "./App.css";
 import DataCard from "./DataCard";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [term, setTerm] = useState("");
   const [post, setPost] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [saved, setSaves] = useLocalStorage("saved", []);
 
   const url = `https://api.urbandictionary.com/v0/define?term=${term}`;
 
@@ -25,7 +33,7 @@ function App() {
           setPost(
             response.data.list.filter((p) => {
               // console.log(p.definition.length);
-              return p.definition.length < 75;
+              return p.definition.length < 150;
             })
           );
         })
@@ -39,6 +47,24 @@ function App() {
 
   const updateTerm = (e) => {
     setTerm(e.target.value);
+  };
+
+  const clearSearch = (e) => {
+    setTerm("");
+    setOpen(true);
+  };
+
+  const handleClose = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const addSave = (newSave) => {
+    let oldSaves = JSON.parse(localStorage.getItem("saved"));
+    oldSaves.push(newSave);
+    setSaves(oldSaves);
   };
 
   return (
@@ -60,18 +86,60 @@ function App() {
           </div>
         </Toolbar>
       </AppBar>
-
+      <Button
+        size="medium"
+        color="primary"
+        variant="outlined"
+        className="clear"
+      >
+        View Saved
+      </Button>
+      <Button
+        size="medium"
+        color="secondary"
+        variant="outlined"
+        className="clear"
+        onClick={clearSearch}
+      >
+        Clear Search
+      </Button>
       {post ? (
         <Grid container spacing={4}>
           {post.map((p) => (
             <Grid item xs={12} sm={6} md={4}>
-              <DataCard data={p} term={term} />
+              <DataCard data={p} term={term} addSave={addSave} />
             </Grid>
           ))}
         </Grid>
       ) : (
-        <p>Search Something</p>
+        <p>Search For Anything</p>
       )}
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Cleared Search"
+        severity="info"
+        action={
+          <React.Fragment>
+            <Button color="secondary" size="small" onClick={handleClose}>
+              Ok
+            </Button>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleClose}
+            >
+              <CloseIcon fontSize="medium" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </div>
   );
 }

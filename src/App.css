@@ -30,3 +30,9 @@
 p {
   text-align: center;
 }
+
+.clear {
+  width: 100%;
+  margin-top: 1% !important;
+  margin-bottom: 1% !important;
+}
