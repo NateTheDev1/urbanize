@@ -10,12 +10,17 @@ import {
   Snackbar,
   IconButton,
   Alert,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import "./App.css";
 import DataCard from "./DataCard";
 import useLocalStorage from "./hooks/useLocalStorage";
+import Saved from "./Saved";
 
 function App() {
   const [term, setTerm] = useState("");
@@ -67,6 +72,14 @@ function App() {
     setSaves(oldSaves);
   };
 
+  const toDelete = (id) => {
+    let oldSaves = JSON.parse(localStorage.getItem("saved"));
+    const newOld = oldSaves.filter((s) => {
+      return s.id !== id;
+    });
+    setSaves(newOld);
+  };
+
   return (
     <div className="App">
       <AppBar position="static" className="app-bar">
@@ -86,14 +99,40 @@ function App() {
           </div>
         </Toolbar>
       </AppBar>
-      <Button
+      {saved.length > 0 ? (
+        <ExpansionPanel style={{ marginTop: "2%" }}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Saved Definitions</Typography>
+          </ExpansionPanelSummary>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              overflowX: "scroll",
+            }}
+          >
+            {saved.map((s) => (
+              <ExpansionPanelDetails>
+                <Saved data={s} term={term} toDelete={toDelete} />
+              </ExpansionPanelDetails>
+            ))}
+          </div>
+        </ExpansionPanel>
+      ) : (
+        <p>Your Saved Definitions Will Appear Here</p>
+      )}
+      {/* <Button
         size="medium"
         color="primary"
         variant="outlined"
         className="clear"
       >
         View Saved
-      </Button>
+      </Button> */}
       <Button
         size="medium"
         color="secondary"
