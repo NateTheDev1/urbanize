@@ -21,7 +21,7 @@ function App() {
     if (term.length > 1) {
       Axios.get(url)
         .then((response) => {
-          // console.log(response.data.list);
+          console.log(response.data.list);
           setPost(
             response.data.list.filter((p) => {
               // console.log(p.definition.length);

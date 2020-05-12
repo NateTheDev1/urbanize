@@ -10,7 +10,7 @@ import {
   IconButton,
   CardMedia,
 } from "@material-ui/core";
-import ShareIcon from "@material-ui/icons/Share";
+import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -21,7 +21,6 @@ const useStyles = makeStyles({
     marginBottom: 12,
   },
   like: {
-    marginTop: 3,
     color: "red",
   },
   container: {
@@ -31,12 +30,31 @@ const useStyles = makeStyles({
 
 const DataCard = (props) => {
   const classes = useStyles();
+
+  const onAdd = () => {
+    let newSave = {
+      word: props.data.word,
+      author: props.data.author,
+      definition: props.data.definition,
+      id: props.data.defid,
+      likes: props.data.thumbs_up,
+      dislikes: props.data.thumbs_down,
+      link: props.data.permalink,
+    };
+    // TODO NEXT
+    // props.addSave(newSave)
+  };
+
+  const toSource = () => {
+    window.location.href = props.data.permalink;
+  };
+
   return (
     <Card className={classes.container}>
       <CardHeader
         action={
           <IconButton aria-label="share">
-            <ShareIcon />
+            <AddIcon style={{ color: "#00C851" }} />
           </IconButton>
         }
         title={props.data.word}
@@ -50,6 +68,11 @@ const DataCard = (props) => {
           Likes: {props.data.thumbs_up} Dislikes: {props.data.thumbs_down}
         </Typography>
       </CardContent>
+      <CardActions>
+        <Button size="small" onClick={toSource}>
+          Source
+        </Button>
+      </CardActions>
     </Card>
   );
 };
