@@ -21,14 +21,17 @@ import "./App.css";
 import DataCard from "./DataCard";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Saved from "./Saved";
+import CasinoIcon from "@material-ui/icons/Casino";
 
 function App() {
   const [term, setTerm] = useState("");
   const [post, setPost] = useState([]);
   const [open, setOpen] = useState(false);
+
   const [saved, setSaves] = useLocalStorage("saved", []);
 
   const url = `https://api.urbandictionary.com/v0/define?term=${term}`;
+  const randURL = `https://api.urbandictionary.com/v0/random`;
 
   useEffect(() => {
     if (term.length > 1) {
@@ -78,6 +81,16 @@ function App() {
       return s.id !== id;
     });
     setSaves(newOld);
+  };
+
+  const handleRandom = () => {
+    Axios.get(randURL)
+      .then((response) => {
+        setTerm(response.data.list[0].word);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -133,6 +146,16 @@ function App() {
       >
         View Saved
       </Button> */}
+      <Button
+        size="large"
+        color="primary"
+        variant="outlined"
+        className="clear"
+        startIcon={<CasinoIcon />}
+        onClick={handleRandom}
+      >
+        Random Word
+      </Button>
       <Button
         size="medium"
         color="secondary"
