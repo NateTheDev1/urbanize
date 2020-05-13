@@ -153,6 +153,7 @@ function App() {
         className="clear"
         startIcon={<CasinoIcon />}
         onClick={handleRandom}
+        cy-data="random"
       >
         Random Word
       </Button>
